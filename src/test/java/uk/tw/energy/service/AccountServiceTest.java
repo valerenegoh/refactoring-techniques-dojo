@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 
 public class AccountServiceTest {
 
@@ -24,7 +25,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void givenTheSmartMeterIdReturnsThePricePlanId() throws Exception {
-        assertThat(accountService.getPricePlanIdForSmartMeterId(SMART_METER_ID)).isEqualTo(PRICE_PLAN_ID);
+    public void givenTheSmartMeterIdReturnsThePricePlanId() {
+        assertThat(accountService.getPricePlanIdForSmartMeterId(SMART_METER_ID), is(PRICE_PLAN_ID));
     }
 }

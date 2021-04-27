@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import uk.tw.energy.builders.MeterReadingsBuilder;
-import uk.tw.energy.domain.MeterReadings;
+import uk.tw.energy.domain.Meter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,8 +26,8 @@ public class EndpointTest {
 
     @Test
     public void shouldStoreReadings() throws JsonProcessingException {
-        MeterReadings meterReadings = new MeterReadingsBuilder().generateElectricityReadings().build();
-        HttpEntity<String> entity = getStringHttpEntity(meterReadings);
+        Meter meter = new MeterReadingsBuilder().generateElectricityReadings().build();
+        HttpEntity<String> entity = getStringHttpEntity(meter);
 
         ResponseEntity<String> response = restTemplate.postForEntity("/readings/store", entity, String.class);
 
@@ -50,7 +50,6 @@ public class EndpointTest {
         populateMeterReadingsForMeter(smartMeterId);
 
         ResponseEntity<String> response = restTemplate.getForEntity("/price-plans/compare-all/" + smartMeterId, String.class);
-
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -72,7 +71,7 @@ public class EndpointTest {
     }
 
     private void populateMeterReadingsForMeter(String smartMeterId) throws JsonProcessingException {
-        MeterReadings readings = new MeterReadingsBuilder().setSmartMeterId(smartMeterId)
+        Meter readings = new MeterReadingsBuilder().setSmartMeterId(smartMeterId)
                 .generateElectricityReadings(20)
                 .build();
 

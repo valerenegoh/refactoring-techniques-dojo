@@ -17,49 +17,73 @@ import java.util.stream.Collectors;
 public class PricePlanService {
 
     private final List<PricePlan> pricePlans;
-    private final MeterReadingService meterReadingService;
+    private final MeterService meterService;
 
-    public PricePlanService(List<PricePlan> pricePlans, MeterReadingService meterReadingService) {
+    public static final String STANDARD_PRICE_PLAN = "Standard";
+    public static final String PREMIUM_PRICE_PLAN = "Premium";
+    public static final String ECO_PRICE_PLAN = "Eco";
+
+    public PricePlanService(List<PricePlan> pricePlans, MeterService meterService) {
         this.pricePlans = pricePlans;
-        this.meterReadingService = meterReadingService;
+        this.meterService = meterService;
     }
 
-    public Optional<Map<String, BigDecimal>> getConsumptionCostOfElectricityReadingsForEachPricePlan(String smartMeterId) {
-        Optional<List<ElectricityReading>> electricityReadings = meterReadingService.getReadings(smartMeterId);
+    public Optional<Map<String, BigDecimal>> getAllPricePlanCostsFoMeter(String smartMeterId) {
+        Optional<List<ElectricityReading>> electricityReadings = meterService.getReadings(smartMeterId);
 
+        //Check if any readings
         if (!electricityReadings.isPresent()) {
             return Optional.empty();
         }
 
-        return Optional.of(pricePlans.stream().collect(
-                Collectors.toMap(PricePlan::getPlanName, t -> calculateCost(electricityReadings.get(), t))));
-    }
+        //Find all price plans given a list of readings
+        Optional<Map<String, BigDecimal>> allPricePlansForMeter = Optional.of(
 
-    private BigDecimal calculateCost(List<ElectricityReading> electricityReadings, PricePlan pricePlan) {
-        BigDecimal average = calculateAverageReading(electricityReadings);
-        BigDecimal timeElapsed = calculateTimeElapsed(electricityReadings);
+            //look at each price plan
+            pricePlans.stream().collect(
+                Collectors.toMap(PricePlan::getPlanName, t -> {
 
-        BigDecimal averagedCost = average.divide(timeElapsed, RoundingMode.HALF_UP);
-        return averagedCost.multiply(pricePlan.getUnitRate());
-    }
+                    //find the average kW unit reading for plan
+                    List<ElectricityReading> er = electricityReadings.get();
+                    BigDecimal summedReadings = er.stream()
+                        .map(ElectricityReading::getReading)
+                        .reduce(BigDecimal.ZERO, (reading, accumulator) -> reading.add(accumulator));
+                    BigDecimal av = summedReadings.divide(BigDecimal.valueOf(er.size()), RoundingMode.HALF_UP);
 
-    private BigDecimal calculateAverageReading(List<ElectricityReading> electricityReadings) {
-        BigDecimal summedReadings = electricityReadings.stream()
-                .map(ElectricityReading::getReading)
-                .reduce(BigDecimal.ZERO, (reading, accumulator) -> reading.add(accumulator));
+                    //find first and last readings
+                    ElectricityReading first = er.stream()
+                        .min(Comparator.comparing(ElectricityReading::getTime))
+                        .get();
+                    ElectricityReading last = er.stream()
+                        .max(Comparator.comparing(ElectricityReading::getTime))
+                        .get();
 
-        return summedReadings.divide(BigDecimal.valueOf(electricityReadings.size()), RoundingMode.HALF_UP);
-    }
+                    //calculate kW average usage over usage time
+                    BigDecimal elapsedTime = BigDecimal.valueOf(Duration.between(first.getTime(), last.getTime()).getSeconds() / 3600.0);
+                    BigDecimal unitsUsedInPeriod = av.multiply(elapsedTime);
 
-    private BigDecimal calculateTimeElapsed(List<ElectricityReading> electricityReadings) {
-        ElectricityReading first = electricityReadings.stream()
-                .min(Comparator.comparing(ElectricityReading::getTime))
-                .get();
-        ElectricityReading last = electricityReadings.stream()
-                .max(Comparator.comparing(ElectricityReading::getTime))
-                .get();
+                    BigDecimal multiplier = null;
+                    // switch on price plan name
+                    switch (t.getPricePlanType()) {
+                        case (STANDARD_PRICE_PLAN):
+                            // No need to multiply
+                            multiplier = BigDecimal.ONE;
+                            break;
+                        case (ECO_PRICE_PLAN):
+                            // Half price
+                            multiplier = BigDecimal.valueOf(0.5);
+                            break;
+                        case (PREMIUM_PRICE_PLAN):
+                            // Multiply by 1.5
+                            multiplier = BigDecimal.valueOf(2);
+                            break;
+                    }
 
-        return BigDecimal.valueOf(Duration.between(first.getTime(), last.getTime()).getSeconds() / 3600.0);
+                    // return total cost for price plan
+                    return unitsUsedInPeriod.multiply(t.getUnitRate().multiply(multiplier));
+                })));
+
+        return allPricePlansForMeter;
     }
 
 }

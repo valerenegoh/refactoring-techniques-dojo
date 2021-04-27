@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import uk.tw.energy.controller.exceptions.NoConsumptionException;
 import uk.tw.energy.service.AccountService;
 import uk.tw.energy.service.PricePlanService;
 
@@ -32,13 +33,14 @@ public class PricePlanComparatorController {
     }
 
     @GetMapping("/compare-all/{smartMeterId}")
-    public ResponseEntity<Map<String, Object>> calculatedCostForEachPricePlan(@PathVariable String smartMeterId) {
+    public ResponseEntity<Map<String, Object>> calculatedCostForEachPricePlan(@PathVariable String smartMeterId) throws NoConsumptionException {
         String pricePlanId = accountService.getPricePlanIdForSmartMeterId(smartMeterId);
         Optional<Map<String, BigDecimal>> consumptionsForPricePlans =
-                pricePlanService.getConsumptionCostOfElectricityReadingsForEachPricePlan(smartMeterId);
+                pricePlanService.getAllPricePlanCostsFoMeter(smartMeterId);
 
         if (!consumptionsForPricePlans.isPresent()) {
-            return ResponseEntity.notFound().build();
+            NoConsumptionException up = new NoConsumptionException("Could not find any usage on the price plan");
+            throw up; //haha
         }
 
         Map<String, Object> pricePlanComparisons = new HashMap<>();
@@ -52,21 +54,22 @@ public class PricePlanComparatorController {
 
     @GetMapping("/recommend/{smartMeterId}")
     public ResponseEntity<List<Map.Entry<String, BigDecimal>>> recommendCheapestPricePlans(@PathVariable String smartMeterId,
-                                                                                           @RequestParam(value = "limit", required = false) Integer limit) {
+                                                                                           @RequestParam(value = "limit", required = false) Integer limit) throws NoConsumptionException {
         Optional<Map<String, BigDecimal>> consumptionsForPricePlans =
-                pricePlanService.getConsumptionCostOfElectricityReadingsForEachPricePlan(smartMeterId);
+                pricePlanService.getAllPricePlanCostsFoMeter(smartMeterId);
 
         if (!consumptionsForPricePlans.isPresent()) {
-            return ResponseEntity.notFound().build();
+            NoConsumptionException up = new NoConsumptionException("Could not find any usage on the price plan");
+            throw up; //haha
         }
 
-        List<Map.Entry<String, BigDecimal>> recommendations = new ArrayList<>(consumptionsForPricePlans.get().entrySet());
-        recommendations.sort(Comparator.comparing(Map.Entry::getValue));
+        List<Map.Entry<String, BigDecimal>> recc = new ArrayList<>(consumptionsForPricePlans.get().entrySet());
+        recc.sort(Comparator.comparing(Map.Entry::getValue));
 
-        if (limit != null && limit < recommendations.size()) {
-            recommendations = recommendations.subList(0, limit);
+        if (limit != null && limit < recc.size()) {
+            recc = recc.subList(0, limit);
         }
 
-        return ResponseEntity.ok(recommendations);
+        return ResponseEntity.ok(recc);
     }
 }

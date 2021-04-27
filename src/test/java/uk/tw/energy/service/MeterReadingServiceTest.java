@@ -7,25 +7,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 
 public class MeterReadingServiceTest {
 
-    private MeterReadingService meterReadingService;
+    private MeterService meterService;
 
     @BeforeEach
     public void setUp() {
-        meterReadingService = new MeterReadingService(new HashMap<>());
+        meterService = new MeterService(new HashMap<>());
     }
 
     @Test
     public void givenMeterIdThatDoesNotExistShouldReturnNull() {
-        assertThat(meterReadingService.getReadings("unknown-id")).isEqualTo(Optional.empty());
+        assertThat(meterService.getReadings("unknown-id"), is(Optional.empty()));
     }
 
     @Test
     public void givenMeterReadingThatExistsShouldReturnMeterReadings() {
-        meterReadingService.storeReadings("random-id", new ArrayList<>());
-        assertThat(meterReadingService.getReadings("random-id")).isEqualTo(Optional.of(new ArrayList<>()));
+        meterService.storeReadings("random-id", new ArrayList<>());
+        assertThat(meterService.getReadings("random-id"), is(Optional.of(new ArrayList<>())));
     }
 }

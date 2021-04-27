@@ -9,11 +9,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class MeterReadingService {
+public class MeterService {
 
     private final Map<String, List<ElectricityReading>> meterAssociatedReadings;
 
-    public MeterReadingService(Map<String, List<ElectricityReading>> meterAssociatedReadings) {
+    public MeterService(Map<String, List<ElectricityReading>> meterAssociatedReadings) {
         this.meterAssociatedReadings = meterAssociatedReadings;
     }
 

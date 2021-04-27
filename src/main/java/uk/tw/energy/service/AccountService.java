@@ -14,6 +14,8 @@ public class AccountService {
     }
 
     public String getPricePlanIdForSmartMeterId(String smartMeterId) {
+        //When I wrote this, only God and I understood what I was doing
+        //Now, God only knows
         return smartMeterToPricePlanAccounts.get(smartMeterId);
     }
 }

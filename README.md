@@ -1,59 +1,10 @@
-# Welcome to PowerDale
-
-PowerDale is a small town with around 100 residents. Most houses have a smart meter installed that can save and send
-information about how much power a house is drawing/using.
-
-There are three major providers of energy in town that charge different amounts for the power they supply.
-
-- _Dr Evil's Dark Energy_
-- _The Green Eco_
-- _Power for Everyone_
-
 # Introducing JOI Energy
 
 JOI Energy is a new start-up in the energy industry. Rather than selling energy they want to differentiate themselves
 from the market by recording their customers' energy usage from their smart meters and recommending the best supplier to
 meet their needs.
 
-You have been placed into their development team, whose current goal is to produce an API which their customers and
-smart meters will interact with.
-
-Unfortunately, two members of the team are on annual leave, and another one has called in sick! You are left with
-another ThoughtWorker to progress with the current user stories on the story wall. This is your chance to make an impact
-on the business, improve the code base and deliver value.
-
-## Story Wall
-
-At JOI energy the development team use a story wall or Kanban board to keep track of features or "stories" as they are
-worked on.
-
-The wall you will be working from today has 7 columns:
-
-- Backlog
-- Ready for Dev
-- In Dev
-- Ready for Testing
-- In Testing
-- Ready for sign off
-- Done
-
-Examples can be found
-here [https://leankit.com/learn/kanban/kanban-board/](https://leankit.com/learn/kanban/kanban-board/)
-
-## Users
-
-To trial the new JOI software 5 people from the JOI accounts team have agreed to test the service and share their energy
-data.
-
-| User    | Smart Meter ID  | Power Supplier        |
-| ------- | --------------- | --------------------- |
-| Sarah   | `smart-meter-0` | Dr Evil's Dark Energy |
-| Peter   | `smart-meter-1` | The Green Eco         |
-| Charlie | `smart-meter-2` | Dr Evil's Dark Energy |
-| Andrea  | `smart-meter-3` | Power for Everyone    |
-| Alex    | `smart-meter-4` | The Green Eco         |
-
-These values are used in the code and in the following examples too.
+Currently JOI energy supports reading and recording customer usages. 
 
 ## Requirements
 
@@ -121,6 +72,19 @@ Run the application which will be listening on port `8080`.
 ```console
 $ ./gradlew bootRun
 ```
+
+## Troubleshooting 
+- If you have issues with Gradle make sure to setup SDK for the project:
+```
+Go to File → Project Structure
+```
+![img_1.png](img_1.png)
+
+- If you have issue running tests with intellij:
+```
+Go to IntelliJ → Preferences and search for Gradle under Build Tools
+```
+![img_2.png](img_2.png)
 
 ## API
 
