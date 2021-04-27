@@ -1,0 +1,20 @@
+.idea
+out
+*.iml
+*.ipr
+*.iws
+simple-http-server/public/*
+*.zip
+selenium/selenium-intro/lib
+
+# Gradle
+**/build/
+**/out/
+**/.gradle/
+
+# osx
+**/*.DS_Store
+.DS_Store
+
+tmp/
+
