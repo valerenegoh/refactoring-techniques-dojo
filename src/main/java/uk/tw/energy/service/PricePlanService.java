@@ -80,7 +80,7 @@ public class PricePlanService {
                     }
 
                     // return total cost for price plan
-                    return unitsUsedInPeriod.multiply(t.getUnitRate().multiply(multiplier));
+                    return unitsUsedInPeriod.multiply(t.getUnitPricePerKWh().multiply(multiplier));
                 })));
 
         return allPricePlansForMeter;
