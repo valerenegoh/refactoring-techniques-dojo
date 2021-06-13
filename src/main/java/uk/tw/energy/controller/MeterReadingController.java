@@ -2,6 +2,8 @@ package uk.tw.energy.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,14 +29,17 @@ public class MeterReadingController {
 
     @PostMapping("/store")
     public ResponseEntity storeReadings(@RequestBody Meter meter) {
-        String id = meter.getSmartMeterId();
-        List<ElectricityReading> readings = meter.getElectricityReadings();
-        if (!(id != null && !id.isEmpty()
-                && readings != null && !readings.isEmpty())) {
+        if (isMeterValid(meter)) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         meterService.storeReadings(meter.getSmartMeterId(), meter.getElectricityReadings());
         return ResponseEntity.ok().build();
+    }
+
+    private boolean isMeterValid(Meter meter) {
+        String id = meter.getSmartMeterId();
+        List<ElectricityReading> readings = meter.getElectricityReadings();
+        return !StringUtils.isEmpty(id) && CollectionUtils.isEmpty(readings);
     }
 
     @GetMapping("/read/{smartMeterId}")
