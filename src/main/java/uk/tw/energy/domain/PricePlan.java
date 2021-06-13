@@ -34,23 +34,4 @@ public class PricePlan {
     public PricePlanType getPricePlanType() {
         return pricePlanType;
     }
-
-    public BigDecimal getPrice(LocalDateTime dateTime, List<PeakTimeMultiplier> peakTimeMultipliers) {
-        return peakTimeMultipliers.stream()
-                .filter(multiplier -> multiplier.dayOfWeek.equals(dateTime.getDayOfWeek()))
-                .findFirst()
-                .map(multiplier -> unitPricePerKWh.multiply(multiplier.multiplier))
-                .orElse(unitPricePerKWh);
-    }
-
-    static class PeakTimeMultiplier {
-
-        DayOfWeek dayOfWeek;
-        BigDecimal multiplier;
-
-        public PeakTimeMultiplier(DayOfWeek dayOfWeek, BigDecimal multiplier) {
-            this.dayOfWeek = dayOfWeek;
-            this.multiplier = multiplier;
-        }
-    }
 }
