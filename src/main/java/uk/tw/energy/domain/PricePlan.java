@@ -10,9 +10,9 @@ public class PricePlan {
     private final String energySupplier;
     private final String planName;
     private final BigDecimal unitPricePerKWh;
-    private final String pricePlanType;
+    private final PricePlanType pricePlanType;
 
-    public PricePlan(String planName, String energySupplier, BigDecimal unitRate, String pricePlanType) {
+    public PricePlan(String planName, String energySupplier, BigDecimal unitRate, PricePlanType pricePlanType) {
         this.planName = planName;
         this.energySupplier = energySupplier;
         this.unitPricePerKWh = unitRate;
@@ -31,7 +31,7 @@ public class PricePlan {
         return unitPricePerKWh;
     }
 
-    public String getPricePlanType() {
+    public PricePlanType getPricePlanType() {
         return pricePlanType;
     }
 

@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PricePlan;
+import uk.tw.energy.domain.PricePlanType;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -35,9 +36,9 @@ class PricePlanServiceTest {
 
     @BeforeEach
     public void setUp() {
-        PricePlan pricePlan1 = new PricePlan(ENERGY_SUPPLIER_1, ENERGY_SUPPLIER_1, BigDecimal.valueOf(100), PricePlanService.STANDARD_PRICE_PLAN);
-        PricePlan pricePlan2 = new PricePlan(ENERGY_SUPPLIER_2, ENERGY_SUPPLIER_2, BigDecimal.valueOf(100), PricePlanService.ECO_PRICE_PLAN);
-        PricePlan pricePlan3 = new PricePlan(ENERGY_SUPPLIER_3, ENERGY_SUPPLIER_3, BigDecimal.valueOf(100), PricePlanService.PREMIUM_PRICE_PLAN);
+        PricePlan pricePlan1 = new PricePlan(ENERGY_SUPPLIER_1, ENERGY_SUPPLIER_1, BigDecimal.valueOf(100), PricePlanType.STANDARD_PRICE_PLAN);
+        PricePlan pricePlan2 = new PricePlan(ENERGY_SUPPLIER_2, ENERGY_SUPPLIER_2, BigDecimal.valueOf(100), PricePlanType.ECO_PRICE_PLAN);
+        PricePlan pricePlan3 = new PricePlan(ENERGY_SUPPLIER_3, ENERGY_SUPPLIER_3, BigDecimal.valueOf(100), PricePlanType.PREMIUM_PRICE_PLAN);
         pricePlanService = new PricePlanService(List.of(pricePlan1, pricePlan2, pricePlan3), meterService);
     }
 

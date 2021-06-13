@@ -11,7 +11,7 @@ public class PricePlanTest {
     @Test
     public void shouldReturnTheEnergySupplierGivenInTheConstructor() {
         String energySupplierName = "Energy Supplier Name";
-        PricePlan pricePlan = new PricePlan(null, energySupplierName, null, PricePlanService.STANDARD_PRICE_PLAN);
+        PricePlan pricePlan = new PricePlan(null, energySupplierName, null, PricePlanType.STANDARD_PRICE_PLAN);
 
         assertThat(pricePlan.getEnergySupplier(), is(energySupplierName));
     }

@@ -3,6 +3,9 @@ package uk.tw.energy.service;
 import org.springframework.stereotype.Service;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PricePlan;
+import uk.tw.energy.domain.PricePlanType;
+
+import static uk.tw.energy.domain.PricePlanType.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,10 +21,6 @@ public class PricePlanService {
 
     private final List<PricePlan> pricePlans;
     private final MeterService meterService;
-
-    public static final String STANDARD_PRICE_PLAN = "Standard";
-    public static final String PREMIUM_PRICE_PLAN = "Premium";
-    public static final String ECO_PRICE_PLAN = "Eco";
 
     public PricePlanService(List<PricePlan> pricePlans, MeterService meterService) {
         this.pricePlans = pricePlans;
@@ -71,7 +70,7 @@ public class PricePlanService {
         return av.multiply(elapsedTime);
     }
 
-    private BigDecimal getMultiplier(String pricePlanType) {
+    private BigDecimal getMultiplier(PricePlanType pricePlanType) {
         switch (pricePlanType) {
             case STANDARD_PRICE_PLAN: return BigDecimal.ONE;
             case ECO_PRICE_PLAN: return BigDecimal.valueOf(0.5);

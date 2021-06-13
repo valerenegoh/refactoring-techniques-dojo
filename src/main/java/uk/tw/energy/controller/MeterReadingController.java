@@ -29,7 +29,7 @@ public class MeterReadingController {
 
     @PostMapping("/store")
     public ResponseEntity storeReadings(@RequestBody Meter meter) {
-        if (isMeterValid(meter)) {
+        if (!isMeterValid(meter)) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         meterService.storeReadings(meter.getSmartMeterId(), meter.getElectricityReadings());
@@ -48,6 +48,6 @@ public class MeterReadingController {
     private boolean isMeterValid(Meter meter) {
         String id = meter.getSmartMeterId();
         List<ElectricityReading> readings = meter.getElectricityReadings();
-        return !StringUtils.isEmpty(id) && CollectionUtils.isEmpty(readings);
+        return !StringUtils.isEmpty(id) && !CollectionUtils.isEmpty(readings);
     }
 }
