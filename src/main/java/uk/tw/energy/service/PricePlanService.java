@@ -46,7 +46,7 @@ public class PricePlanService {
                     //find the average kW unit reading for plan
                     List<ElectricityReading> er = electricityReadings.get();
                     BigDecimal summedReadings = er.stream()
-                        .map(ElectricityReading::getReading)
+                        .map(ElectricityReading::getReadingInKW)
                         .reduce(BigDecimal.ZERO, (reading, accumulator) -> reading.add(accumulator));
                     BigDecimal av = summedReadings.divide(BigDecimal.valueOf(er.size()), RoundingMode.HALF_UP);
 

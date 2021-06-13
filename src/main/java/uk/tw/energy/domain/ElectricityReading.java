@@ -6,17 +6,15 @@ import java.time.Instant;
 public class ElectricityReading {
 
     private Instant time;
-    private BigDecimal reading; // kW
-
-    public ElectricityReading() { }
+    private BigDecimal readingInKW;
 
     public ElectricityReading(Instant time, BigDecimal reading) {
         this.time = time;
-        this.reading = reading;
+        this.readingInKW = reading;
     }
 
-    public BigDecimal getReading() {
-        return reading;
+    public BigDecimal getReadingInKW() {
+        return readingInKW;
     }
 
     public Instant getTime() {
