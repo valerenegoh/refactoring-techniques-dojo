@@ -36,12 +36,6 @@ public class MeterReadingController {
         return ResponseEntity.ok().build();
     }
 
-    private boolean isMeterValid(Meter meter) {
-        String id = meter.getSmartMeterId();
-        List<ElectricityReading> readings = meter.getElectricityReadings();
-        return !StringUtils.isEmpty(id) && CollectionUtils.isEmpty(readings);
-    }
-
     @GetMapping("/read/{smartMeterId}")
     public ResponseEntity readReadings(@PathVariable String smartMeterId) {
         Optional<List<ElectricityReading>> readings = meterService.getReadings(smartMeterId);
@@ -49,5 +43,11 @@ public class MeterReadingController {
         return readings.isPresent()
                 ? ResponseEntity.ok(readings.get())
                 : ResponseEntity.notFound().build();
+    }
+
+    private boolean isMeterValid(Meter meter) {
+        String id = meter.getSmartMeterId();
+        List<ElectricityReading> readings = meter.getElectricityReadings();
+        return !StringUtils.isEmpty(id) && CollectionUtils.isEmpty(readings);
     }
 }

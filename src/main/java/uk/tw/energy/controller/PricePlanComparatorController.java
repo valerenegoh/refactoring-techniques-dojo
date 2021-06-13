@@ -39,8 +39,7 @@ public class PricePlanComparatorController {
                 pricePlanService.getAllPricePlanCostsFoMeter(smartMeterId);
 
         if (!consumptionsForPricePlans.isPresent()) {
-            NoConsumptionException up = new NoConsumptionException("Could not find any usage on the price plan");
-            throw up; //haha
+            throw new NoConsumptionException("Could not find any usage on the price plan");
         }
 
         Map<String, Object> pricePlanComparisons = new HashMap<>();
@@ -59,8 +58,7 @@ public class PricePlanComparatorController {
                 pricePlanService.getAllPricePlanCostsFoMeter(smartMeterId);
 
         if (!consumptionsForPricePlans.isPresent()) {
-            NoConsumptionException up = new NoConsumptionException("Could not find any usage on the price plan");
-            throw up; //haha
+            throw new NoConsumptionException("Could not find any usage on the price plan");
         }
 
         List<Map.Entry<String, BigDecimal>> recc = new ArrayList<>(consumptionsForPricePlans.get().entrySet());
