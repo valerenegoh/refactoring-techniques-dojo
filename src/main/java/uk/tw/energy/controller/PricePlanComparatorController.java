@@ -35,39 +35,43 @@ public class PricePlanComparatorController {
     @GetMapping("/compare-all/{smartMeterId}")
     public ResponseEntity<Map<String, Object>> calculatedCostForEachPricePlan(@PathVariable String smartMeterId) throws NoConsumptionException {
         String pricePlanId = accountService.getPricePlanIdForSmartMeterId(smartMeterId);
-        Optional<Map<String, BigDecimal>> consumptionsForPricePlans =
-                pricePlanService.getAllPricePlanCostsFoMeter(smartMeterId);
 
-        if (!consumptionsForPricePlans.isPresent()) {
-            throw new NoConsumptionException("Could not find any usage on the price plan");
-        }
+        Map<String, BigDecimal> consumptionsForPricePlans = getConsumptionsForPricePlans(smartMeterId);
 
         Map<String, Object> pricePlanComparisons = new HashMap<>();
         pricePlanComparisons.put(PRICE_PLAN_ID_KEY, pricePlanId);
-        pricePlanComparisons.put(PRICE_PLAN_COMPARISONS_KEY, consumptionsForPricePlans.get());
+        pricePlanComparisons.put(PRICE_PLAN_COMPARISONS_KEY, consumptionsForPricePlans);
 
-        return consumptionsForPricePlans.isPresent()
-                ? ResponseEntity.ok(pricePlanComparisons)
-                : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(pricePlanComparisons);
     }
 
     @GetMapping("/recommend/{smartMeterId}")
     public ResponseEntity<List<Map.Entry<String, BigDecimal>>> recommendCheapestPricePlans(@PathVariable String smartMeterId,
                                                                                            @RequestParam(value = "limit", required = false) Integer limit) throws NoConsumptionException {
+        Map<String, BigDecimal> consumptionsForPricePlans = getConsumptionsForPricePlans(smartMeterId);
+
+        List<Map.Entry<String, BigDecimal>> recc = extractCheapestPricePlans(consumptionsForPricePlans, limit);
+
+        return ResponseEntity.ok(recc);
+    }
+
+    private Map<String, BigDecimal> getConsumptionsForPricePlans(String smartMeterId) {
         Optional<Map<String, BigDecimal>> consumptionsForPricePlans =
                 pricePlanService.getAllPricePlanCostsFoMeter(smartMeterId);
 
         if (!consumptionsForPricePlans.isPresent()) {
             throw new NoConsumptionException("Could not find any usage on the price plan");
         }
+        return consumptionsForPricePlans.get();
+    }
 
-        List<Map.Entry<String, BigDecimal>> recc = new ArrayList<>(consumptionsForPricePlans.get().entrySet());
+    private List<Map.Entry<String, BigDecimal>> extractCheapestPricePlans(Map<String, BigDecimal> consumptionsForPricePlans, Integer limit) {
+        List<Map.Entry<String, BigDecimal>> recc = new ArrayList<>(consumptionsForPricePlans.entrySet());
         recc.sort(Comparator.comparing(Map.Entry::getValue));
 
         if (limit != null && limit < recc.size()) {
             recc = recc.subList(0, limit);
         }
-
-        return ResponseEntity.ok(recc);
+        return recc;
     }
 }
