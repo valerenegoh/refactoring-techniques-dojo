@@ -48,7 +48,7 @@ class PricePlanServiceTest {
                 new ElectricityReading(Instant.now().minus(Duration.ofHours(2)), BigDecimal.valueOf(15.0)),
                 new ElectricityReading(Instant.now(), BigDecimal.valueOf(5.0)))));
 
-        Map<String, BigDecimal> pricePlanCostsForReadings = pricePlanService.getAllPricePlanCostsFoMeter(SMART_METER_ID).get();
+        Map<String, BigDecimal> pricePlanCostsForReadings = pricePlanService.getAllPricePlanCostsForMeter(SMART_METER_ID).get();
 
         assertThat(pricePlanCostsForReadings.size(), is(3));
         assertThat(pricePlanCostsForReadings.get(ENERGY_SUPPLIER_1), comparesEqualTo(BigDecimal.valueOf(2000.0)));
@@ -59,6 +59,6 @@ class PricePlanServiceTest {
     @Test
     public void shouldReturnEmptyWhenNoReadingsForMeterId() {
         when(meterService.getReadings(SMART_METER_ID)).thenReturn(Optional.empty());
-        assertThat(pricePlanService.getAllPricePlanCostsFoMeter(SMART_METER_ID), is(Optional.empty()));
+        assertThat(pricePlanService.getAllPricePlanCostsForMeter(SMART_METER_ID), is(Optional.empty()));
     }
 }

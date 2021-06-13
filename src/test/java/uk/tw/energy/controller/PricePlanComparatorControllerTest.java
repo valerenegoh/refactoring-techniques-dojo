@@ -42,7 +42,7 @@ public class PricePlanComparatorControllerTest {
 
         Map<String, BigDecimal> pricePlanComparisons = createPricePlanCostComparisons();
         when(accountService.getPricePlanIdForSmartMeterId(SMART_METER_ID)).thenReturn(PRICE_PLAN_1_ID);
-        when(pricePlanService.getAllPricePlanCostsFoMeter(SMART_METER_ID)).thenReturn(Optional.of(pricePlanComparisons));
+        when(pricePlanService.getAllPricePlanCostsForMeter(SMART_METER_ID)).thenReturn(Optional.of(pricePlanComparisons));
 
         Map<String, Object> responseBody = controller.calculatedCostForEachPricePlan(SMART_METER_ID).getBody();
         assertThat(responseBody.get(PricePlanComparatorController.PRICE_PLAN_ID_KEY), is(PRICE_PLAN_1_ID));
@@ -53,7 +53,7 @@ public class PricePlanComparatorControllerTest {
     public void shouldRecommendCheapestPricePlansInOrderNoLimitForMeterUsage() {
 
         Map<String, BigDecimal> pricePlanComparisons = createPricePlanCostComparisons();
-        when(pricePlanService.getAllPricePlanCostsFoMeter(SMART_METER_ID)).thenReturn(Optional.of(pricePlanComparisons));
+        when(pricePlanService.getAllPricePlanCostsForMeter(SMART_METER_ID)).thenReturn(Optional.of(pricePlanComparisons));
 
         List<Map.Entry<String, BigDecimal>> responseBody = controller.recommendCheapestPricePlans(SMART_METER_ID, null).getBody();
 
@@ -70,7 +70,7 @@ public class PricePlanComparatorControllerTest {
     public void shouldRecommendLimitedCheapestPricePlansInOrderForMeterUsage() {
 
         Map<String, BigDecimal> pricePlanComparisons = createPricePlanCostComparisons();
-        when(pricePlanService.getAllPricePlanCostsFoMeter(SMART_METER_ID)).thenReturn(Optional.of(pricePlanComparisons));
+        when(pricePlanService.getAllPricePlanCostsForMeter(SMART_METER_ID)).thenReturn(Optional.of(pricePlanComparisons));
 
         List<Map.Entry<String, BigDecimal>> responseBody = controller.recommendCheapestPricePlans(SMART_METER_ID, 2).getBody();
 
@@ -85,7 +85,7 @@ public class PricePlanComparatorControllerTest {
     public void shouldRecommendAllPricePlansInOrderWhenFewerPricePlansThanLimit() {
 
         Map<String, BigDecimal> pricePlanCostComparisons = createPricePlanCostComparisons();
-        when(pricePlanService.getAllPricePlanCostsFoMeter(SMART_METER_ID)).thenReturn(Optional.of(pricePlanCostComparisons));
+        when(pricePlanService.getAllPricePlanCostsForMeter(SMART_METER_ID)).thenReturn(Optional.of(pricePlanCostComparisons));
 
         List<Map.Entry<String, BigDecimal>> responseBody = controller.recommendCheapestPricePlans(SMART_METER_ID, 5).getBody();
 
@@ -100,7 +100,7 @@ public class PricePlanComparatorControllerTest {
 
     @Test
     public void givenNoMatchingMeterIdShouldReturnNotFound() {
-        when(pricePlanService.getAllPricePlanCostsFoMeter(SMART_METER_ID)).thenReturn(Optional.empty());
+        when(pricePlanService.getAllPricePlanCostsForMeter(SMART_METER_ID)).thenReturn(Optional.empty());
         assertThrows(NoConsumptionException.class, () -> controller.calculatedCostForEachPricePlan("not-found"));
     }
 

@@ -57,7 +57,7 @@ public class PricePlanComparatorController {
 
     private Map<String, BigDecimal> getConsumptionsForPricePlans(String smartMeterId) {
         Optional<Map<String, BigDecimal>> consumptionsForPricePlans =
-                pricePlanService.getAllPricePlanCostsFoMeter(smartMeterId);
+                pricePlanService.getAllPricePlanCostsForMeter(smartMeterId);
 
         if (!consumptionsForPricePlans.isPresent()) {
             throw new NoConsumptionException("Could not find any usage on the price plan");
