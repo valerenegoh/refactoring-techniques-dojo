@@ -5,8 +5,6 @@ import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PricePlan;
 import uk.tw.energy.domain.PricePlanType;
 
-import static uk.tw.energy.domain.PricePlanType.*;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;

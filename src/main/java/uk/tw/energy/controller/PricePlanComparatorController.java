@@ -50,9 +50,9 @@ public class PricePlanComparatorController {
                                                                                            @RequestParam(value = "limit", required = false) Integer limit) throws NoConsumptionException {
         Map<String, BigDecimal> consumptionsForPricePlans = getConsumptionsForPricePlans(smartMeterId);
 
-        List<Map.Entry<String, BigDecimal>> recc = extractCheapestPricePlans(consumptionsForPricePlans, limit);
+        List<Map.Entry<String, BigDecimal>> cheapestPricePlans = extractCheapestPricePlans(consumptionsForPricePlans, limit);
 
-        return ResponseEntity.ok(recc);
+        return ResponseEntity.ok(cheapestPricePlans);
     }
 
     private Map<String, BigDecimal> getConsumptionsForPricePlans(String smartMeterId) {
@@ -66,12 +66,12 @@ public class PricePlanComparatorController {
     }
 
     private List<Map.Entry<String, BigDecimal>> extractCheapestPricePlans(Map<String, BigDecimal> consumptionsForPricePlans, Integer limit) {
-        List<Map.Entry<String, BigDecimal>> recc = new ArrayList<>(consumptionsForPricePlans.entrySet());
-        recc.sort(Comparator.comparing(Map.Entry::getValue));
+        List<Map.Entry<String, BigDecimal>> pricePlans = new ArrayList<>(consumptionsForPricePlans.entrySet());
+        pricePlans.sort(Comparator.comparing(Map.Entry::getValue));
 
-        if (limit != null && limit < recc.size()) {
-            recc = recc.subList(0, limit);
+        if (limit != null && limit < pricePlans.size()) {
+            pricePlans = pricePlans.subList(0, limit);
         }
-        return recc;
+        return pricePlans;
     }
 }

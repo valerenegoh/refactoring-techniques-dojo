@@ -10,7 +10,6 @@ import uk.tw.energy.configuration.generator.ElectricityReadingsGenerator;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PricePlan;
 import uk.tw.energy.domain.PricePlanType;
-import uk.tw.energy.service.PricePlanService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
